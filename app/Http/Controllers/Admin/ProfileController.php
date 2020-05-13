@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Profiles;
+use App\Log;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -48,6 +50,14 @@ class ProfileController extends Controller
         unset($profiles_form['_token']);
       
         $profiles->fill($profiles_form)->save();
+        
+        $log = new Log;
+        
+        $log->profiles_id = $profiles->id;
+        
+        $log->edited_at = Carbon::now();
+        
+        $log->save();
 
         return redirect('admin/profile/edit');
     }
